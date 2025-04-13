@@ -6,7 +6,7 @@
   <title>Document</title>
 </head>
 <body>
-  <h1>FORMULARIO4</h1>
+  <h1>FORMULARIO6</h1>
   <form id="formulario">
     <input type="text" name="nombre" required placeholder="Nombre">
     <input type="email" name="correo" required placeholder="Correo">
@@ -26,24 +26,25 @@
       };
     
       try {
-        const response = await fetch('https://script.google.com/macros/s/AKfycbzhffk4kSnkvrqX9pHvL3OQjND9LlT4WAGhfBDCUn3eZSFTwvWRZHTrt-gtul7QDaq8/exec', {
+        const response = await fetch('https://script.google.com/macros/s/AKfycbyrxpsfkEbZLQS0I3_iyC8u4VxJWDOpEaxkEhe77H6DgUORQyu4kpqo1hexCr5TD_Fv/exec', {
           method: 'POST',
           body: JSON.stringify(data),
           headers: {
-            'Content-Type': 'application/json',
-          },
+            'Content-Type': 'application/json'
+          }
         });
     
         const result = await response.json();
+    
         if (result.status === 'success') {
-          alert("Mensaje enviado correctamente");
+          alert("Formulario enviado correctamente");
           form.reset();
         } else {
           alert("Error al enviar: " + result.message);
         }
     
       } catch (err) {
-        alert("Error de conexión: " + err.message);
+        alert("Error de red: " + err.message);
       }
     });
     </script>
