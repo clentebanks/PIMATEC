@@ -6,40 +6,43 @@
   <title>Document</title>
 </head>
 <body>
-  <H1>FORMULARIO</H1>
+  <H1>FORMULARIO2</H1>
   <form id="formulario">
-    <input type="text" name="nombre" placeholder="Nombre" required />
-    <input type="email" name="correo" placeholder="Correo" required />
-    <textarea name="mensaje" placeholder="Mensaje" required></textarea>
+    <input type="text" name="nombre" required placeholder="Nombre">
+    <input type="email" name="correo" required placeholder="Correo">
+    <textarea name="mensaje" required placeholder="Mensaje"></textarea>
     <button type="submit">Enviar</button>
   </form>
   
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwasoo59QyL6o8FztlLSQK5B1nKX_ouaYNwQH1CklIrWObpg85Nt-wzs0x0PTLhaVRW/exec';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxuLWDzp18th0bA1N9g0p-Okw41uLdWvuGdz9n-5HnhSX3zFs9AB6iQjbpuF9auNQL_/exec'; // tu nueva URL
   
-    document.getElementById('formulario').addEventListener('submit', e => {
+    document.getElementById('formulario').addEventListener('submit', async e => {
       e.preventDefault();
-      const formData = new FormData(e.target);
-      const data = Object.fromEntries(formData.entries());
+      const form = e.target;
+      const formData = new FormData(form);
+      const json = Object.fromEntries(formData.entries());
   
-      fetch(scriptURL, {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json'
+      try {
+        const res = await fetch(scriptURL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(json),
+        });
+  
+        const result = await res.json();
+        if (result.status === 'success') {
+          alert('Formulario enviado correctamente');
+          form.reset();
+        } else {
+          alert('Error en el servidor: ' + result.message);
         }
-      })
-      .then(res => res.text())
-      .then(data => {
-        alert("Mensaje enviado correctamente");
-        e.target.reset();
-      })
-      .catch(err => {
-        alert("Error al enviar el formulario");
-        console.error(err);
-      });
+      } catch (err) {
+        alert('Error al enviar el formulario: ' + err.message);
+      }
     });
   </script>
+  
   
 </body>
 </html>
