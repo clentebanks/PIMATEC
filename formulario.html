@@ -2,28 +2,21 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Formulario de Contacto</title>
+  <title>Formulario</title>
 </head>
 <body>
-  <h1>Formulario de Contacto100</h1>
-
-  <form id="contactForm">
-    <label for="nombre">Nombre:</label>
-    <input type="text" id="nombre" name="nombre" required><br>
-
-    <label for="correo">Correo:</label>
-    <input type="email" id="correo" name="correo" required><br>
-
-    <label for="mensaje">Mensaje:</label>
-    <textarea id="mensaje" name="mensaje" required></textarea><br>
-
+  <form id="formulario">
+    <label>Nombre:</label>
+    <input type="text" id="nombre" required><br>
+    <label>Correo:</label>
+    <input type="email" id="correo" required><br>
+    <label>Mensaje:</label>
+    <textarea id="mensaje" required></textarea><br>
     <button type="submit">Enviar</button>
   </form>
 
   <script>
-    const form = document.getElementById("contactForm");
-
-    form.addEventListener("submit", function(e) {
+    document.getElementById("formulario").addEventListener("submit", function(e) {
       e.preventDefault();
 
       const data = {
@@ -32,22 +25,16 @@
         mensaje: document.getElementById("mensaje").value
       };
 
-      fetch('https://script.google.com/macros/s/AKfycbyeQbvCzucNQ-em0VexuVNKVQnKRx0pMkbM0znQwm1BDRYVuqWI_Tu8DKd0OBhUSRj-/exec', {
-        method: 'POST',
-        mode: 'no-cors',
+      fetch("https://script.google.com/macros/s/AKfycbw5WGCT1aq-9jNXGRA3gjvZPfjZ2x7NoTB2mQAZb9BFghe9T5D9SScD7g1pUNNzGvjP/exec", { // <-- Cambia por tu URL
+        method: "POST",
+        mode: "no-cors", // ⚠️ no-cors no deja ver la respuesta
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json"
         },
         body: JSON.stringify(data)
-      })
-      .then(response => {
-        console.log("Formulario enviado");
-        alert("Formulario enviado correctamente.");
-      })
-      .catch(error => {
-        console.error("Error:", error);
-        alert("Hubo un error al enviar el formulario.");
       });
+
+      alert("Formulario enviado (aunque no podamos ver la respuesta por CORS).");
     });
   </script>
 </body>
