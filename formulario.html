@@ -6,7 +6,7 @@
 </head>
 <body>
   <h2>Formulario de Contacto</h2>
-  <form id="formulario" action="https://script.google.com/macros/s/AKfycbywiEy7Nuu7VywbGdrW9FfExtYCo-eC4DQnkLuGCBQ7Yb9Dj_2MpePQci60G4IzCscDYg/exec" method="POST">
+  <form id="formulario" action="https://script.google.com/macros/s/AKfycbx-FiLO1qenkUa-CgjyTtcyRKP9olgPdf_ccjVu8PDhNJbQ8yYe_rTN4HaNYUwfKCt6sw/exec" method="POST">
     <input name="nombre" type="text" placeholder="Tu nombre" required><br>
     <input name="correo" type="email" placeholder="Tu correo" required><br>
     <textarea name="mensaje" placeholder="Tu mensaje" required></textarea><br>
@@ -27,7 +27,7 @@
       fetch(form.action, {
         method: "POST",
         body: formData,
-        mode: "no-cors"
+        mode: "no-cors" // clave para evitar CORS
       }).then(() => {
         respuesta.textContent = "✅ ¡Mensaje enviado!";
         form.reset();
@@ -38,4 +38,3 @@
   </script>
 </body>
 </html>
-
