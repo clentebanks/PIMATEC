@@ -1,59 +1,44 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Formulario de Contacto</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
 </head>
 <body>
-  <h2>Formulario de Contacto</h2>
-  <form id="formulario-contacto">
-    <div class="mb-4">
-      <input type="text" class="form-control border-0 py-3" id="nombre" placeholder="Su nombre" required>
-    </div>
-    <div class="mb-4">
-      <input type="email" class="form-control border-0 py-3" id="correo" placeholder="Su correo electrónico" required>
-    </div>
-    <div class="mb-4">
-      <textarea class="form-control border-0 py-3" id="mensaje" rows="6" placeholder="Mensaje" required></textarea>
-    </div>
-    <div class="text-start">
-      <button class="btn bg-primary text-white py-3 px-5" type="submit">Enviar mensaje</button>
-    </div>
-    <div id="mensaje-respuesta" class="mt-3"></div>
+  <form id="formulario">
+    <input type="text" name="nombre" placeholder="Nombre" required />
+    <input type="email" name="correo" placeholder="Correo" required />
+    <textarea name="mensaje" placeholder="Mensaje" required></textarea>
+    <button type="submit">Enviar</button>
   </form>
+  
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbz6Xp3uSyHFKxjdQZlfuj07CyJ9_Rkm7a4AQZc_08dJ7LfCIxOmGM-KtfMaTvM0WTs/exec'; // Pega aquí tu URL de Apps Script
-    const form = document.getElementById('formulario-contacto');
-    const mensajeRespuesta = document.getElementById('mensaje-respuesta');
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwasoo59QyL6o8FztlLSQK5B1nKX_ouaYNwQH1CklIrWObpg85Nt-wzs0x0PTLhaVRW/exec';
   
-    form.addEventListener('submit', async (e) => {
+    document.getElementById('formulario').addEventListener('submit', e => {
       e.preventDefault();
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
   
-      const nombre = document.getElementById('nombre').value.trim();
-      const correo = document.getElementById('correo').value.trim();
-      const mensaje = document.getElementById('mensaje').value.trim();
-  
-      if (!nombre || !correo || !mensaje) {
-        mensajeRespuesta.innerHTML = '<div class="alert alert-danger">Todos los campos son obligatorios.</div>';
-        return;
-      }
-  
-      try {
-        const respuesta = await fetch(scriptURL, {
-          method: 'POST',
-          body: JSON.stringify({ nombre, correo, mensaje }),
-          headers: { 'Content-Type': 'application/json' }
-        });
-  
-        const resultado = await respuesta.json();
-        mensajeRespuesta.innerHTML = '<div class="alert alert-success">Mensaje enviado con éxito. ¡Gracias!</div>';
-        form.reset();
-      } catch (error) {
-        mensajeRespuesta.innerHTML = '<div class="alert alert-danger">Hubo un error al enviar tu mensaje.</div>';
-        console.error(error);
-      }
+      fetch(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.text())
+      .then(data => {
+        alert("Mensaje enviado correctamente");
+        e.target.reset();
+      })
+      .catch(err => {
+        alert("Error al enviar el formulario");
+        console.error(err);
+      });
     });
   </script>
-    
+  
 </body>
 </html>
