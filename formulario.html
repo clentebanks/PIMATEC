@@ -1,51 +1,54 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Formulario de Contacto</title>
 </head>
 <body>
-  <h1>FORMULARIO10</h1>
-  <form id="contact-form" method="POST" action="https://script.google.com/macros/s/AKfycbzhffk4kSnkvrqX9pHvL3OQjND9LlT4WAGhfBDCUn3eZSFTwvWRZHTrt-gtul7QDaq8/exec">
-    <input type="text" name="nombre" placeholder="Nombre" required>
-    <input type="email" name="correo" placeholder="Correo" required>
-    <textarea name="mensaje" placeholder="Mensaje" required></textarea>
-    <button type="submit">Enviar</button>
-</form>
+  <h1>Formulario de Contacto100</h1>
 
-  
-<script>
-  document.getElementById("contact-form").addEventListener("submit", function(event) {
-    event.preventDefault();  // Evita que el formulario se envíe de manera predeterminada
-  
-    const formData = new FormData(this);
-    const data = {
-      nombre: formData.get('nombre'),
-      correo: formData.get('correo'),
-      mensaje: formData.get('mensaje')
-    };
-  
-    fetch('https://script.google.com/macros/s/AKfycbyeQbvCzucNQ-em0VexuVNKVQnKRx0pMkbM0znQwm1BDRYVuqWI_Tu8DKd0OBhUSRj-/exec', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)  // Convierte los datos del formulario a JSON
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log("Success:", data);
-      alert("Formulario enviado correctamente.");
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      alert("Hubo un error al enviar el formulario.");
+  <form id="contactForm">
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre" name="nombre" required><br>
+
+    <label for="correo">Correo:</label>
+    <input type="email" id="correo" name="correo" required><br>
+
+    <label for="mensaje">Mensaje:</label>
+    <textarea id="mensaje" name="mensaje" required></textarea><br>
+
+    <button type="submit">Enviar</button>
+  </form>
+
+  <script>
+    const form = document.getElementById("contactForm");
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const data = {
+        nombre: document.getElementById("nombre").value,
+        correo: document.getElementById("correo").value,
+        mensaje: document.getElementById("mensaje").value
+      };
+
+      fetch('https://script.google.com/macros/s/AKfycbyeQbvCzucNQ-em0VexuVNKVQnKRx0pMkbM0znQwm1BDRYVuqWI_Tu8DKd0OBhUSRj-/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        console.log("Formulario enviado");
+        alert("Formulario enviado correctamente.");
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        alert("Hubo un error al enviar el formulario.");
+      });
     });
-  });
   </script>
-  
-  
-  
 </body>
 </html>
