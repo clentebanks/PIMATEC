@@ -6,49 +6,45 @@
   <title>Document</title>
 </head>
 <body>
-  <h1>FORMULARIO8</h1>
-  <form id="formulario">
-    <input type="text" name="nombre" required placeholder="Nombre">
-    <input type="email" name="correo" required placeholder="Correo">
-    <textarea name="mensaje" required placeholder="Mensaje"></textarea>
+  <h1>FORMULARIO10</h1>
+  <form id="contact-form" method="POST" action="https://script.google.com/macros/s/AKfycbzhffk4kSnkvrqX9pHvL3OQjND9LlT4WAGhfBDCUn3eZSFTwvWRZHTrt-gtul7QDaq8/exec">
+    <input type="text" name="nombre" placeholder="Nombre" required>
+    <input type="email" name="correo" placeholder="Correo" required>
+    <textarea name="mensaje" placeholder="Mensaje" required></textarea>
     <button type="submit">Enviar</button>
-  </form>
+</form>
+
   
-  <script>
-    document.querySelector("form").addEventListener("submit", async function(e) {
-      e.preventDefault();
-    
-      const form = e.target;
-      const data = {
-        nombre: form.nombre.value,
-        correo: form.correo.value,
-        mensaje: form.mensaje.value,
-      };
-    
-      try {
-        const response = await fetch('https://script.google.com/macros/s/AKfycbyqH-RbHMaWi1TCNA-HQpRFmWIIPhIrFwQ6o_gS8o_VHFS97HjxmPwxbZkkEM6YcZ_4/exec', {
-          method: 'POST',
-          body: JSON.stringify(data),
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-    
-        const result = await response.json();
-    
-        if (result.status === 'success') {
-          alert("Formulario enviado correctamente");
-          form.reset();
-        } else {
-          alert("Error al enviar: " + result.message);
-        }
-    
-      } catch (err) {
-        alert("Error de red: " + err.message);
-      }
+<script>
+  document.getElementById("contact-form").addEventListener("submit", function(event) {
+    event.preventDefault();  // Evita que el formulario se envíe de manera predeterminada
+  
+    const formData = new FormData(this);
+    const data = {
+      nombre: formData.get('nombre'),
+      correo: formData.get('correo'),
+      mensaje: formData.get('mensaje')
+    };
+  
+    fetch('https://script.google.com/macros/s/AKfycbyeQbvCzucNQ-em0VexuVNKVQnKRx0pMkbM0znQwm1BDRYVuqWI_Tu8DKd0OBhUSRj-/exec', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)  // Convierte los datos del formulario a JSON
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log("Success:", data);
+      alert("Formulario enviado correctamente.");
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      alert("Hubo un error al enviar el formulario.");
     });
-    </script>
-    
+  });
+  </script>
+  
   
   
 </body>
