@@ -474,6 +474,21 @@
     right: -140px;
     transition: 1s;
 }
+/*---------------------------------------*/
+.equal-height {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.equal-height {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.blog-content {
+    flex-grow: 1;
+}
 
 /*** Blog End ***/
 
