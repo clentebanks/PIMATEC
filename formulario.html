@@ -11,37 +11,31 @@
     <input type="text" id="nombre" required><br>
     <label>Correo:</label>
     <input type="email" id="correo" required><br>
-    <label>Mensaje:</label>
+    <label>Mensaje2:</label>
     <textarea id="mensaje" required></textarea><br>
     <button type="submit">Enviar</button>
   </form>
   
   <script>
-    document.getElementById("formulario").addEventListener("submit", async function(e) {
+    document.getElementById("formulario").addEventListener("submit", function(e) {
       e.preventDefault();
   
-      const nombre = document.getElementById("nombre").value;
-      const correo = document.getElementById("correo").value;
-      const mensaje = document.getElementById("mensaje").value;
+      const form = document.getElementById("formulario");
+      const formData = new FormData(form);
   
-      const data = { nombre, correo, mensaje };
-  
-      try {
-        await fetch("https://script.google.com/macros/s/AKfycbwVouByINVTnMto4PGKWkIa9xAZwpNQod9xmyNl1dhI4-osyB_iFi451Z62gcTtHbYk/exec", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        });
-  
+      fetch("https://script.google.com/macros/s/AKfycbx-7ZZPph2tyFcwzVIap0wEckAguIpZ65rSn8UryG2w0XrMZk_aLeUdun9sGQOdsyE/exec", {
+        method: "POST",
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
         alert("Formulario enviado correctamente.");
-        document.getElementById("formulario").reset();
-  
-      } catch (error) {
+        form.reset();
+      })
+      .catch(error => {
         console.error("Error al enviar el formulario:", error);
         alert("Hubo un error al enviar el formulario.");
-      }
+      });
     });
   </script>
   
