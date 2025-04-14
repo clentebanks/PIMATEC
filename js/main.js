@@ -111,9 +111,33 @@
 const scriptURL = 'https://script.google.com/macros/s/AKfycbw0OZIwC52N4FQCXM9CeCTl6sRSXaCwPiNfrtcHEA5BAIxYGkcAhyKFwSOGcHXmC0Eo1g/exec'
   const form = document.forms['submit-to-google-sheet']
 
-  form.addEventListener('submit', e => {
-    e.preventDefault()
-    fetch(scriptURL, { method: 'POST', body: new FormData(form)})
-      .then(response => console.log('Success!', response))
-      .catch(error => console.error('Error!', error.message))
-  })
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+  
+    try {
+      const response = await fetch(scriptURL, {
+        method: 'POST',
+        body: new FormData(form),
+      });
+  
+      if (response.ok) {
+        alert('✅ Formulario enviado con éxito.');
+        form.reset(); // Limpia el formulario después de enviarlo
+      } else {
+        throw new Error(`Error en la respuesta: ${response.statusText}`);
+      }
+    } catch (error) {
+      alert('❌ Ocurrió un error al enviar el formulario. Por favor, inténtalo de nuevo.');
+      console.error('Detalles del error:', error);
+    }
+  });
+  
+
+
+
+//   form.addEventListener('submit', e => {
+//     e.preventDefault()
+//     fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+//       .then(response => alert('Success!', response))
+//       .catch(error => alert('Error!', error.message))
+//   })
