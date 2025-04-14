@@ -107,3 +107,13 @@
 
 })(jQuery);
 
+/**CONTACT FORM para enviar a google sheets los datos */
+const scriptURL = 'https://script.google.com/macros/s/AKfycbw0OZIwC52N4FQCXM9CeCTl6sRSXaCwPiNfrtcHEA5BAIxYGkcAhyKFwSOGcHXmC0Eo1g/exec'
+  const form = document.forms['submit-to-google-sheet']
+
+  form.addEventListener('submit', e => {
+    e.preventDefault()
+    fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+      .then(response => console.log('Success!', response))
+      .catch(error => console.error('Error!', error.message))
+  })
