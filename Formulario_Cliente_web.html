@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Formulario Cliente - Página Web</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f4f7fa;
+    }
+    .form-container {
+      background: #fff;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 0 20px rgba(24, 17, 17, 0.1);
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="form-container">
+    <h2 class="mb-4 text-center">Formulario de Solicitud para Página Web</h2>
+    <form id="webForm">
+      <!-- 1. Información General -->
+      <h5>1. Información General</h5>
+      <div class="mb-3">
+        <label>Nombre completo</label>
+        <input type="text" class="form-control" name="nombre" required>
+      </div>
+      <div class="mb-3">
+        <label>Empresa o Marca</label>
+        <input type="text" class="form-control" name="empresa">
+      </div>
+      <div class="mb-3">
+        <label>Correo electrónico</label>
+        <input type="email" class="form-control" name="correo" required>
+      </div>
+      <div class="mb-3">
+        <label>Teléfono / WhatsApp</label>
+        <input type="tel" class="form-control" name="telefono" required pattern="[0-9+ ]{7,15}">
+      </div>
+
+      <!-- 2. Objetivo -->
+      <h5 class="mt-4">2. Objetivo del Sitio</h5>
+      <div class="mb-3">
+        <label>¿Cuál es el objetivo principal?</label>
+        <textarea class="form-control" name="objetivo" rows="2" required></textarea>
+      </div>
+
+      <!-- 3. Tipo de Sitio -->
+      <h5 class="mt-4">3. Tipo de Sitio</h5>
+      <div class="mb-3">
+        <select class="form-select" name="tipo_sitio" id="tipoSitio" required>
+          <option value="">Selecciona una opción</option>
+          <option value="institucional">Página institucional</option>
+          <option value="tienda">Tienda online</option>
+          <option value="blog">Blog</option>
+          <option value="portafolio">Portafolio</option>
+          <option value="landing">Landing Page</option>
+        </select>
+      </div>
+
+      <!-- Condicional: Solo si es tienda online -->
+      <div id="tiendaExtra" class="hidden">
+        <h6>Detalles de Tienda Online</h6>
+        <div class="mb-3">
+          <label>¿Cuántos productos ofrecerás aproximadamente?</label>
+          <input type="number" class="form-control" name="productos" min="1">
+        </div>
+        <div class="mb-3">
+          <label>¿Qué método de pago quieres integrar?</label>
+          <input type="text" class="form-control" name="metodo_pago">
+        </div>
+      </div>
+
+      <!-- 4. Contenido -->
+      <h5 class="mt-4">4. Contenido</h5>
+      <div class="mb-3">
+        <label>Secciones deseadas (Inicio, Nosotros, etc.)</label>
+        <input type="text" class="form-control" name="secciones" required>
+      </div>
+        
+      <!-- 5. Diseño -->
+      <h5 class="mt-4">5. Diseño y Estilo</h5>
+      <div class="mb-3">
+        <label>Paleta de colores o estilo</label>
+        <textarea class="form-control" name="estilo" rows="2"></textarea>
+      </div>
+
+      <!-- 6. Funcionalidades -->
+      <h5 class="mt-4">6. Funcionalidades Extras</h5>
+      <div class="mb-3">
+        <label>Selecciona lo que necesitas</label>
+        <textarea class="form-control" name="funcionalidades" rows="2"></textarea>
+      </div>
+      <!-- Sección 7 -->
+      <div class="form-section">
+        <h4>7. Plazos y Presupuesto</h4>
+        <div class="mb-3">
+          <label class="form-label">Presupuesto estimado</label>
+          <select class="form-select" name="Presupuesto">
+            <option>Menos de $200</option>
+            <option>$200 – $500</option>
+            <option>$500 – $1000</option>
+            <option>Más de $1000</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Plazo estimado</label>
+          <select class="form-select" name="Plazo">
+            <option>Urgente (menos de 1 semana)</option>
+            <option>1 – 2 semanas</option>
+            <option>1 mes</option>
+            <option>Flexible / No tengo prisa</option>
+          </select>
+        </div>
+      </div>
+      <!-- 8. Comentarios -->
+      <h5 class="mt-4">7. Comentarios adicionales</h5>
+      <div class="mb-3">
+        <textarea class="form-control" name="comentarios" rows="4" placeholder="¿Algo más que deberíamos saber?"></textarea>
+      </div>
+
+      <!-- Mensajes -->
+      <div id="msg" class="alert d-none"></div>
+
+      <!-- Botones -->
+      <div class="d-flex justify-content-between mt-4">
+        <button type="submit" class="btn btn-primary">Enviar</button>
+        <!-- <button type="button" class="btn btn-secondary" onclick="descargarPDF()">Descargar PDF</button> -->
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<script>
+  const tipoSitio = document.getElementById('tipoSitio');
+  const tiendaExtra = document.getElementById('tiendaExtra');
+  const msg = document.getElementById('msg');
+
+  // Mostrar/ocultar sección de tienda
+  tipoSitio.addEventListener('change', () => {
+    tiendaExtra.classList.toggle('hidden', tipoSitio.value !== 'tienda');
+  });
+
+  // Envío a Google Sheets
+  const scriptURL = 'https://script.google.com/macros/s/AKfycby2i6kBxs9GnHqonf1PXixTeUjdQAlpGT8ul_zsSRYMNZzffGeW0JtosF9d9WGAfTreig/exec'; // ← pega tu URL aquí
+  const form = document.getElementById('webForm');
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    msg.classList.add('d-none');
+
+    // Validación extra si es tienda
+    if (tipoSitio.value === 'tienda') {
+      const productos = form.querySelector('input[name="productos"]');
+      const metodo = form.querySelector('input[name="metodo_pago"]');
+      if (!productos.value || !metodo.value) {
+        msg.textContent = 'Por favor completa los campos adicionales de la tienda online.';
+        msg.className = 'alert alert-warning';
+        msg.classList.remove('d-none');
+        return;
+      }
+    }
+
+    fetch(scriptURL, { method: 'POST', body: new FormData(form) })
+      .then(response => {
+        msg.textContent = '✅ ¡Formulario enviado con éxito!';
+        msg.className = 'alert alert-success';
+        msg.classList.remove('d-none');
+        form.reset();
+        tiendaExtra.classList.add('hidden');
+      })
+      .catch(error => {
+        msg.textContent = '❌ Ocurrió un error al enviar los datos.';
+        msg.className = 'alert alert-danger';
+        msg.classList.remove('d-none');
+      });
+  });
+
+  // Descargar PDF
+  function descargarPDF() {
+  const form = document.getElementById('webForm');
+  const formData = new FormData(form);
+
+  // Creamos un contenedor real en el DOM pero oculto
+  const tempDiv = document.createElement('div');
+  tempDiv.style.display = 'none'; // Oculto
+  document.body.appendChild(tempDiv); // Lo agregamos al DOM
+
+  // Construimos el contenido
+  let htmlContent = `<h2>Resumen de la Solicitud</h2><ul>`;
+  formData.forEach((value, key) => {
+    const label = key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, " ");
+    htmlContent += `<li><strong>${label}:</strong> ${value}</li>`;
+  });
+  htmlContent += `</ul>`;
+
+  tempDiv.innerHTML = htmlContent;
+
+  // Generar PDF
+  html2pdf()
+    .from(tempDiv)
+    .set({
+      margin: 10,
+      filename: 'formulario-cliente.pdf',
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    })
+    .save()
+    .then(() => {
+      document.body.removeChild(tempDiv); // Eliminamos el contenedor después
+    })
+    .catch(error => {
+      console.error("Error al generar el PDF: ", error);
+    });
+}
+</script>
+
+
+</body>
+
+
