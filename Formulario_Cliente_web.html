@@ -200,54 +200,54 @@
         msg.classList.remove('d-none');
       });
   });
-
-  // Descargar PDF
-      // Se obtiene el elemento HTML con el id 'form-container' y se guarda en la variable 'formulario'
+  
+//descargar en forma de PDF
+  // Se obtiene el elemento HTML que contiene el formulario a convertir en PDF
 var formulario = document.getElementById('form-container');
 
-// Se obtiene el botón (o enlace) con el id 'descargar-pdf' y se guarda en la variable 'descargar_pdf'
+// Se obtiene el botón (o enlace) que el usuario presiona para descargar el PDF
 var descargar_pdf = document.getElementById('descargar-pdf');
 
-// Se define una función que se ejecutará cuando se haga clic en el botón 'descargar_pdf'
+// Se define la función que se ejecutará cuando el usuario haga clic en el botón de descarga
 descargar_pdf.onclick = function() {
 
-  // Se crea un nuevo documento PDF usando la librería jsPDF
-  // 'p' indica orientación vertical (portrait), 'pt' es la unidad (puntos), y 'letter' es el tamaño de hoja
+  // Se crea una nueva instancia del documento PDF con orientación vertical ('p'), unidades en puntos ('pt') y tamaño 'letter'
   var doc = new jsPDF('p', 'pt', 'letter');
 
-  // Se define un margen de 20 puntos alrededor del contenido
+  // Se define un margen de 20 puntos alrededor del contenido en el PDF
   var margin = 20;
 
-  // Se calcula una escala para ajustar el contenido de la página al tamaño del PDF en pantallas grandes
+  // Se calcula una escala para ajustar el contenido al ancho del PDF en pantallas grandes (escritorio)
   var scale = (doc.internal.pageSize.width - margin * 2) / document.body.clientWidth;
 
-  // Se intenta calcular una escala para dispositivos móviles (aquí hay un error, lo veremos más abajo)
-  var scale_mobile = (doc.internal.pageSize.width - margin * 2) / document.body.getBoundingClientRect();
+  // Se calcula una escala para ajustar el contenido al ancho del PDF en dispositivos móviles
+  // Aquí se usa el ancho visible del cuerpo del documento (`getBoundingClientRect().width`)
+  var scale_mobile = (doc.internal.pageSize.width - margin * 2) / document.body.getBoundingClientRect().width;
 
-  // Se verifica si el usuario está en un dispositivo móvil usando el 'userAgent' del navegador
-  if(/Android|weBOS|iPhone|iPod|IEmobile|Opera Mini/i.test(navigator.userAgent)){
+  // Se verifica si el usuario está usando un dispositivo móvil por medio del userAgent del navegador
+  if(/Android|webOS|iPhone|iPod|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
 
-    // Si es un dispositivo móvil, se genera el PDF usando el contenido del formulario
+    // Si es un dispositivo móvil, se renderiza el contenido usando la escala adaptada para móviles
     doc.html(formulario, {
-      x: margin, // posición X donde se empieza a colocar el contenido
-      y: margin, // posición Y donde se empieza a colocar el contenido
+      x: margin, // Coordenada X (horizontal) inicial en el PDF
+      y: margin, // Coordenada Y (vertical) inicial en el PDF
       html2canvas: {
-        scale: scale_mobile // escala para renderizar el contenido correctamente en móviles
+        scale: scale_mobile // Se usa la escala calculada para móviles
       },
       callback: function(doc) {
-        // Cuando el PDF esté listo, se abre en una nueva ventana del navegador
+        // Una vez que se ha generado el PDF, se abre en una nueva ventana/pestaña del navegador
         doc.output('dataurlnewwindow', {filename: 'pdf.pdf'});
       }
     });
 
   } else {
 
-    // Si es una computadora de escritorio, se genera el PDF igual pero usando otra escala
+    // Si es escritorio, se renderiza el contenido con la escala calculada para pantallas grandes
     doc.html(formulario, {
       x: margin,
       y: margin,
       html2canvas: {
-        scale: scale // escala adecuada para pantallas grandes
+        scale: scale // Escala para escritorio
       },
       callback: function(doc) {
         doc.output('dataurlnewwindow', {filename: 'pdf.pdf'});
@@ -256,6 +256,7 @@ descargar_pdf.onclick = function() {
 
   }
 }
+
 
 </script>
 
