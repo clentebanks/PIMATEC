@@ -24,8 +24,8 @@
 </head>
 <body>
 
-<div class="container">
-  <div class="form-container">
+<div class="container d-flex justify-content-center">
+  <div class="form-container w-100" style="max-width: 80%;"" id="form-container">
     <h2 class="mb-4 text-center">Formulario de Solicitud para Página Web</h2>
     <form id="webForm">
       <!-- 1. Información General -->
@@ -102,7 +102,7 @@
       </div>
       <!-- Sección 7 -->
       <div class="form-section">
-        <h4>7. Plazos y Presupuesto</h4>
+        <h5 class="mt-4">7. Plazos y Presupuesto</h5>
         <div class="mb-3">
           <label class="form-label">Presupuesto estimado</label>
           <select class="form-select" name="Presupuesto">
@@ -123,18 +123,28 @@
         </div>
       </div>
       <!-- 8. Comentarios -->
-      <h5 class="mt-4">7. Comentarios adicionales</h5>
+      <h5 class="mt-4">8. Comentarios adicionales</h5>
       <div class="mb-3">
         <textarea class="form-control" name="comentarios" rows="4" placeholder="¿Algo más que deberíamos saber?"></textarea>
       </div>
 
       <!-- Mensajes -->
       <div id="msg" class="alert d-none"></div>
+      <!-- Alerta responsiva y flexible con Bootstrap -->
+      <div class="row mt-3">
+        <div class="col-12">
+          <div class="alert alert-warning text-center" role="alert">
+            ⚠️ <strong>Importante:</strong> Antes de enviar, asegúrate de <strong>descargar el PDF</strong> haciendo clic en el botón correspondiente.
+          </div>
+        </div>
+      </div>
 
-      <!-- Botones -->
-      <div class="d-flex justify-content-between mt-4">
-        <button type="submit" class="btn btn-primary">Enviar</button>
-        <!-- <button type="button" class="btn btn-secondary" onclick="descargarPDF()">Descargar PDF</button> -->
+     <!-- Botones de acción -->
+      <div class="d-flex flex-column flex-md-row justify-content-between mt-4 gap-3">
+        <button type="submit" class="btn btn-primary w-100 w-md-auto">Enviar</button>
+        <button type="button" class="btn btn-warning w-100 w-md-auto" onclick="descargarPDF()" id="descargar-pdf">
+          📄 Descargar PDF
+        </button>
       </div>
     </form>
   </div>
@@ -144,6 +154,8 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
+<script src="js/html2canvas.js" ></script>
+<script src="js/jspdf.debug.js" ></script>
 <script>
   const tipoSitio = document.getElementById('tipoSitio');
   const tiendaExtra = document.getElementById('tiendaExtra');
@@ -190,42 +202,61 @@
   });
 
   // Descargar PDF
-  function descargarPDF() {
-  const form = document.getElementById('webForm');
-  const formData = new FormData(form);
+      // Se obtiene el elemento HTML con el id 'form-container' y se guarda en la variable 'formulario'
+var formulario = document.getElementById('form-container');
 
-  // Creamos un contenedor real en el DOM pero oculto
-  const tempDiv = document.createElement('div');
-  tempDiv.style.display = 'none'; // Oculto
-  document.body.appendChild(tempDiv); // Lo agregamos al DOM
+// Se obtiene el botón (o enlace) con el id 'descargar-pdf' y se guarda en la variable 'descargar_pdf'
+var descargar_pdf = document.getElementById('descargar-pdf');
 
-  // Construimos el contenido
-  let htmlContent = `<h2>Resumen de la Solicitud</h2><ul>`;
-  formData.forEach((value, key) => {
-    const label = key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, " ");
-    htmlContent += `<li><strong>${label}:</strong> ${value}</li>`;
-  });
-  htmlContent += `</ul>`;
+// Se define una función que se ejecutará cuando se haga clic en el botón 'descargar_pdf'
+descargar_pdf.onclick = function() {
 
-  tempDiv.innerHTML = htmlContent;
+  // Se crea un nuevo documento PDF usando la librería jsPDF
+  // 'p' indica orientación vertical (portrait), 'pt' es la unidad (puntos), y 'letter' es el tamaño de hoja
+  var doc = new jsPDF('p', 'pt', 'letter');
 
-  // Generar PDF
-  html2pdf()
-    .from(tempDiv)
-    .set({
-      margin: 10,
-      filename: 'formulario-cliente.pdf',
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    })
-    .save()
-    .then(() => {
-      document.body.removeChild(tempDiv); // Eliminamos el contenedor después
-    })
-    .catch(error => {
-      console.error("Error al generar el PDF: ", error);
+  // Se define un margen de 20 puntos alrededor del contenido
+  var margin = 20;
+
+  // Se calcula una escala para ajustar el contenido de la página al tamaño del PDF en pantallas grandes
+  var scale = (doc.internal.pageSize.width - margin * 2) / document.body.clientWidth;
+
+  // Se intenta calcular una escala para dispositivos móviles (aquí hay un error, lo veremos más abajo)
+  var scale_mobile = (doc.internal.pageSize.width - margin * 2) / document.body.getBoundingClientRect();
+
+  // Se verifica si el usuario está en un dispositivo móvil usando el 'userAgent' del navegador
+  if(/Android|weBOS|iPhone|iPod|IEmobile|Opera Mini/i.test(navigator.userAgent)){
+
+    // Si es un dispositivo móvil, se genera el PDF usando el contenido del formulario
+    doc.html(formulario, {
+      x: margin, // posición X donde se empieza a colocar el contenido
+      y: margin, // posición Y donde se empieza a colocar el contenido
+      html2canvas: {
+        scale: scale_mobile // escala para renderizar el contenido correctamente en móviles
+      },
+      callback: function(doc) {
+        // Cuando el PDF esté listo, se abre en una nueva ventana del navegador
+        doc.output('dataurlnewwindow', {filename: 'pdf.pdf'});
+      }
     });
+
+  } else {
+
+    // Si es una computadora de escritorio, se genera el PDF igual pero usando otra escala
+    doc.html(formulario, {
+      x: margin,
+      y: margin,
+      html2canvas: {
+        scale: scale // escala adecuada para pantallas grandes
+      },
+      callback: function(doc) {
+        doc.output('dataurlnewwindow', {filename: 'pdf.pdf'});
+      }
+    });
+
+  }
 }
+
 </script>
 
 
