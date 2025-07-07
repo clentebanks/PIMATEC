@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba A/B Botón</title>
+</head>
+<body>
+    <h1>Prueba A/B de Botones</h1>
+
+    <!-- Botones A y B -->
+    <button id="buttonA" style="display:none;">Ver precios y ahorrar más</button>
+    <button id="buttonB" style="display:none;">Arma tu paquete y paga menos</button>
+
+    <h3>Botón A presionado: <span id="counterA">0</span> veces</h3>
+    <h3>Botón B presionado: <span id="counterB">0</span> veces</h3>
+
+    <script>
+        // Función para mostrar una versión del botón aleatoriamente
+        function showABTestButton() {
+            // Aleatoriza si mostrar el botón A o B
+            const version = Math.random() < 0.5 ? 'A' : 'B';
+
+            if (version === 'A') {
+                document.getElementById('buttonA').style.display = 'inline-block'; // Muestra el botón A
+            } else {
+                document.getElementById('buttonB').style.display = 'inline-block'; // Muestra el botón B
+            }
+        }
+
+        // Función para incrementar el contador del botón A
+        function incrementButtonACounter() {
+            const counter = document.getElementById('counterA');
+            counter.innerText = parseInt(counter.innerText) + 1;
+        }
+
+        // Función para incrementar el contador del botón B
+        function incrementButtonBCounter() {
+            const counter = document.getElementById('counterB');
+            counter.innerText = parseInt(counter.innerText) + 1;
+        }
+
+        // Llamada para mostrar el botón A/B cuando se carga la página
+        window.onload = showABTestButton;
+
+        // Evento para manejar el click del botón A
+        document.getElementById('buttonA').addEventListener('click', incrementButtonACounter);
+
+        // Evento para manejar el click del botón B
+        document.getElementById('buttonB').addEventListener('click', incrementButtonBCounter);
+    </script>
+</body>
+</html>
